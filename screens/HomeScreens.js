@@ -6,12 +6,17 @@ import StoreInformation from '../components/StoreInformation';
 import { getRecommendProductinfo, getStoreInfoRemote } from '../remote/appRemote';
 import RecomandProduct from '../components/RecomandProduct';
 import CartButton from '../components/CartButton';
-export default function HomeScreens() {
+
+
+
+export default function HomeScreens(props) {
     const [keyword, setKeyword] = useState('')
     const [loading, setLoading] = useState(true)
     const [result, setResult] = useState(null)
     const [recommendResult, recommendSetResult] = useState(null)
     const [cart, setCart] = useState([])
+    const [totalPrice, setTotal] = useState(null);
+
 
     useEffect(() => {
         (async () => {
@@ -32,6 +37,20 @@ export default function HomeScreens() {
 
     }, []
     )
+    useEffect(() => {
+        let tempPrice = 0 
+        for (let item of cart) {
+            console.log(item.quantity);
+            console.log(item.price);
+            let itemPrice = item.quantity * parseInt(item.price)
+            console.log("my item price",itemPrice);
+            tempPrice = tempPrice + itemPrice
+           
+        }
+        setTotal(tempPrice)
+
+    }, [cart])
+
     // A function that update Cart State
     const updateCart = id => {
         // console.log(id)
@@ -49,10 +68,9 @@ export default function HomeScreens() {
             let newCart = [...cart]
             let index = cart.findIndex(item => item.id === id)
             // console.log(index)
-            newCart.splice(index)
-            newCart.push(newObj)
-            console.log(newCart);
+            newCart.splice(index, 1, newObj)
             setCart(newCart)
+
         }
         else {
             // create a new Item, set the quantity 1, update the cart
@@ -62,6 +80,10 @@ export default function HomeScreens() {
 
             }
             newobj.quantity = 1
+            if (newobj.variation === "true") {
+                newobj.price = newobj.price_variation[0].amount
+                console.log("newObject price",newobj.price);
+               }
             let newCart = [...cart]
             newCart.push(newobj)
             setCart(newCart)
@@ -73,8 +95,8 @@ export default function HomeScreens() {
 
     const removeCart = id => {
         // filter the item from the cart
-        let cartItem =cart.find(item => item.id === id)
-        console.log(cartItem);
+        let cartItem = cart.find(item => item.id === id)
+        // console.log(cartItem);
         // item is found get the quantity value
         if (cartItem) {
             let quantity = cartItem.quantity
@@ -82,7 +104,7 @@ export default function HomeScreens() {
             if (quantity === 1) {
                 let newCart = [...cart]
                 let index = newCart.findIndex(item => item.id === id)
-                newCart.splice(index)
+                newCart.splice(index, 1)
                 // console.log(newCart)
                 setCart(newCart)
             }
@@ -91,12 +113,11 @@ export default function HomeScreens() {
                 let newObj = {
                     ...cartItem
                 }
-                
-                newObj.quantity =  newObj.quantity-1;
+
+                newObj.quantity = newObj.quantity - 1;
                 let newCart = [...cart]
                 let index = cart.findIndex(item => item.id === id)
-                newCart.splice(index)
-                newCart.push(newObj)
+                newCart.splice(index, 1, newObj)
                 setCart(newCart)
             }
         } else {
@@ -147,7 +168,7 @@ export default function HomeScreens() {
                     }) : null
                 }
             </ScrollView>
-            <CartButton cart={cart}/>
+            {cart.length > 0 ? <CartButton cart={cart} totalPrice={totalPrice} navigation={props.navigation}/> : null}
         </View>
     )
 }

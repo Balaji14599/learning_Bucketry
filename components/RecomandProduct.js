@@ -15,7 +15,7 @@ export default function RecomandProduct(props) {
         if (props.variation === "true") {
             setPrice(props.price_variation[0])
         }
-        // console.log(props.price_variation);
+        
     }, [])
 
     const incrementAction = () => {
