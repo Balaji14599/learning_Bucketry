@@ -47,9 +47,11 @@ export default function HomeScreens() {
             }
             newObj.quantity += 1
             let newCart = [...cart]
-            let index =  cart.findIndex(item => item.id === id)
+            let index = cart.findIndex(item => item.id === id)
+            // console.log(index)
             newCart.splice(index)
             newCart.push(newObj)
+            console.log(newCart);
             setCart(newCart)
         }
         else {
@@ -67,6 +69,39 @@ export default function HomeScreens() {
             // console.log(JSON.stringify(newobj))
         }
 
+    }
+
+    const removeCart = id => {
+        // filter the item from the cart
+        let cartItem =cart.find(item => item.id === id)
+        console.log(cartItem);
+        // item is found get the quantity value
+        if (cartItem) {
+            let quantity = cartItem.quantity
+            // else remove the whole valuew
+            if (quantity === 1) {
+                let newCart = [...cart]
+                let index = newCart.findIndex(item => item.id === id)
+                newCart.splice(index)
+                // console.log(newCart)
+                setCart(newCart)
+            }
+            //if quantity greater than 1 decrement the quantity and update the cart
+            else {
+                let newObj = {
+                    ...cartItem
+                }
+                
+                newObj.quantity =  newObj.quantity-1;
+                let newCart = [...cart]
+                let index = cart.findIndex(item => item.id === id)
+                newCart.splice(index)
+                newCart.push(newObj)
+                setCart(newCart)
+            }
+        } else {
+            console.log("critical error")
+        }
     }
     return (
         <View>
@@ -105,16 +140,14 @@ export default function HomeScreens() {
                                     price_variation={item.price_variation}
                                     cart={cart}
                                     updateCart={updateCart}
+                                    removeCart={removeCart}
                                 />
                             </View>
                         )
                     }) : null
                 }
-
-
-
             </ScrollView>
-            <CartButton />
+            <CartButton cart={cart}/>
         </View>
     )
 }

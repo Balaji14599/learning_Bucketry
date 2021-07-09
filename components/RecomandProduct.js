@@ -23,12 +23,22 @@ export default function RecomandProduct(props) {
         // console.log(props.id)
         props.updateCart(props.id)
     }
+    const decrementAction = () => {
+        // console.log('Update Triggerd')
+         console.log(props.id)
+        props.removeCart(props.id)
+    }
 
     useEffect(() => {
         console.log('Cart Updated')
         let isInCart = props.cart.find(item => item.id === props.id)
+        // console.log("cart deatils",isInCart);
         if (isInCart) {
             setQuantity(isInCart.quantity)
+        }
+        else{
+            
+setQuantity(0)
         }
     }, [props.cart])
 
@@ -41,7 +51,7 @@ export default function RecomandProduct(props) {
                         source={{ uri: props.recomendImage }}
                         style={styles.recomendImage} />
                     <View>
-                        <Text style={styles.category_name}>{props.category_name}</Text>
+                        <Text style={styles.category_name}>{props.category_name} {props.id}</Text>
                         <View style={{ flexDirection: "row" }}>
                             <View>
                                 <Image source={require('../assets/picture.png')}
@@ -56,7 +66,7 @@ export default function RecomandProduct(props) {
                             <Text style={styles.demoamount}>₹{price.demo_amount}</Text>
                         </View>
                     </View>
-                    <AddQuantity quantity={quantity} incrementAction={incrementAction} />
+                    <AddQuantity quantity={quantity} incrementAction={incrementAction} decrementAction={decrementAction}/>
                 </View>
 
             </View>
@@ -72,7 +82,7 @@ const AddQuantity = (props) => {
         <View style={styles.addquantity}>
             {props.quantity > 0 ? (
                 <View style={{ flexDirection: "row", position: "absolute" }}>
-                    <Pressable >
+                    <Pressable onPress={props.decrementAction}>
                         <Icon name="remove-outline" size={30} color="#FFFFFF"
                             style={{ backgroundColor: "#000000", borderRadius: 50, width: 35, height: 35, textAlign: "center" }} />
                     </Pressable>
