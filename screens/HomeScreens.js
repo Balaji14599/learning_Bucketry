@@ -168,7 +168,8 @@ export default function HomeScreens(props) {
                     }) : null
                 }
             </ScrollView>
-            {cart.length > 0 ? <CartButton cart={cart} totalPrice={totalPrice} navigation={props.navigation}/> : null}
+            {cart.length > 0 ? <CartButton cart={cart} totalPrice={totalPrice} navigation={props.navigation}
+            result={result}/> : null}
         </View>
     )
 }

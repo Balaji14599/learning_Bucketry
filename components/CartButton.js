@@ -4,6 +4,7 @@ import { View, Text, StyleSheet, Button, Pressable } from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons';
 
 export default function CartButton(props) {
+    console.log("my new result is",props.result.Restaurant_image);
     return (
         <View style={styles.container}>
             <View style={{ flexDirection: "row" }}>
@@ -12,7 +13,7 @@ export default function CartButton(props) {
                     <Text style={styles.cartItemPrice}>₹{props.totalPrice}</Text>
                 </View>
             </View>
-            <Pressable onPress={() => props.navigation.navigate('cartScreen')}>
+            <Pressable onPress={() => props.navigation.push('cartScreen',{cart:props.cart,result:props.result,totalPrice:props.totalPrice})}>
                 <View style={styles.viewCartTab}>
                     <Text style={styles.viewCart}>View Cart</Text>
                     <Icon name="cart" size={30} color="#CBA960" />
@@ -60,6 +61,5 @@ const styles = StyleSheet.create({
         height: 35,
         marginVertical: 5,
         marginHorizontal: 55,
-
     }
 })
